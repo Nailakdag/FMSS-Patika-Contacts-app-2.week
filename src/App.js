@@ -3,29 +3,38 @@ import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 
 function App() {
+  // Stateler tanımlandı
   const [todo, setTodo] = useState();
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || []
   );
   const [statusFilter, setStatusFilter] = useState("All");
 
+  // Localstorage todos datasına göre güncellendi sayfa yenilendiğinde todolar locale kayıt olduğu için tekrar geliyor.
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+  // Todo Ekleme fonksiyonu
   const handleAddTodo = (e) => {
     e.preventDefault();
     setTodos([...todos, { title: todo, isChecked: false, id: nanoid() }]);
     setTodo("");
   };
+
+  // Todo ya tıklanıldığında check ve ya uncheck eden fonksiyon
   const handleCheck = (data) => {
     const myTodo = todos.find((todo) => todo.id === data.id);
     myTodo.isChecked = !data.isChecked;
     setTodos([...todos]);
   };
+
+  // Todoları silen fonksiyon
   const handleRemoveTodo = (todo) => {
     setTodos(todos.filter((data) => data.id !== todo.id));
   };
+
+  // Checked edilen tamamlanmış todoları silen fonksiyon
   const handleClearActive = () => {
     setTodos(
       todos.filter((todo) => {
@@ -33,6 +42,8 @@ function App() {
       })
     );
   };
+
+  // Filtrelenen Todos listelerini oluşturan fonksiyon
   const filterFunction = (statusFilter) => {
     if (statusFilter === "All") {
       return [...todos];
